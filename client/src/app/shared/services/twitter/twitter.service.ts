@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch'; 
 
@@ -8,7 +8,11 @@ import { NotificationService } from '../notification/notification.service';
 
 import { Tweet } from '../../models/tweet.model';
 
-@Injectable()
+@Injectable(
+  {
+    providedIn:'root'
+  }
+)
 export class TwitterService {
 
   constructor(private httpClient: HttpClient,
@@ -51,7 +55,8 @@ export class TwitterService {
         return this.simplifyArray(res, this.simplifyTweet);
       })
       .catch((err) => {
-        return Observable.throw('Could not get tweets. Try again later.');
+        console.info(err);
+        return Observable.throwError('Could not get tweets. Try again later.');
       });
   }
 

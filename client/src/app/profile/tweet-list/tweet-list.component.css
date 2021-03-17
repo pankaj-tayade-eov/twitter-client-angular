@@ -22,8 +22,12 @@ a {
   font-size: 14px;
   border: 0px;
   color: #fff;
-}
 
+  
+}
+.view-tweet{
+  background: #0fa2b1;
+}
 .label {
   display: block;
   width: 100%;
