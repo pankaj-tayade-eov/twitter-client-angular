@@ -13,19 +13,13 @@ const corsOption = {
 app.use(cors(corsOption));
 
 //Todo: put these keys in .env file and then get it from env veriables.
-//var client = new Twitter({
-//  consumer_key: '',
-//  consumer_secret: '',
-//  access_token_key: '',
-//  access_token_secret: ''
-//});
-
 var client = new Twitter({
-  consumer_key: 'Q9huwMqSpZLwXSrQ9VgHI4zig',
-  consumer_secret: 'dvjdWGPcEZMIrDlrifWfp6HgyFDzv0dgqNbp5Tihzdzak75Azc',
-  access_token_key: '1370982172425744384-lfKZCKhPskDSo1zqgQi68moPaAUYRs',
-  access_token_secret: '0qFYtreoRgobhvXkqFXYG5bsmLmq3Beqa5tDp9T2xvHGv'
+  consumer_key: '',
+  consumer_secret: '',
+  access_token_key: '',
+  access_token_secret: ''
 });
+
 
 app.get('/tweets', (req, res) => {
 	var params = {screen_name: req.query.twitter_user_name, count: req.query.count};
