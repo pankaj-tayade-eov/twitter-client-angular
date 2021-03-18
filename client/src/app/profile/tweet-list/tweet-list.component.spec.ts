@@ -1,8 +1,9 @@
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DebugElement } from '@angular/core';
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
+import { TwitterService } from 'src/app/shared/services/twitter/twitter.service';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { TweetListComponent } from './tweet-list.component';
 
@@ -12,8 +13,12 @@ describe('TweeterComponent', () => {
     let el: HTMLElement;
     let de: DebugElement;
 
+    
 
     beforeEach(async(() => {
+
+
+
         TestBed.configureTestingModule({
             declarations: [TweetListComponent],
             imports: [
@@ -60,24 +65,30 @@ describe('TweeterComponent', () => {
         expect(el.querySelector('button').disabled).toBeFalsy;
     }));
 
-    it('submitForm method has been called 0 times', fakeAsync(() => {
-        fixture.autoDetectChanges();
-        spyOn(component, 'onSubmit').and.callThrough();;
-        component.twitterForm.controls['twitter_user_name'].setValue('Platform9Sys');
-        component.loader = true;
-        fixture.autoDetectChanges();
-        let btn = fixture.debugElement.query(By.css('.view-tweet'));
-        btn.triggerEventHandler('click', null);
-        tick();
-        fixture.detectChanges();
 
-        expect(component.onSubmit).toHaveBeenCalledTimes(0);
-    }))
+    it('should call TwitterService.getTweets() method on component.onSubmit()', () => {
+
+        let myService = TestBed.get(TwitterService);
+        let mySpy = spyOn(myService, 'getTweets').and.callThrough();
+
+        spyOn(component, 'onSubmit').and.callThrough();
+        
+        component.twitterForm.controls['twitter_user_name'].setValue('Platform9Sys');
+        
+        component.onSubmit();
+
+        expect(component.twitterForm.invalid).toBeFalsy();
+        expect(myService).toBeDefined();
+        expect(mySpy).toBeDefined();
+
+        expect(mySpy).toHaveBeenCalledTimes(1);
+
+    });
 
 
     it('Tweeter list to be rendered', async(() => {
 
-        component.tweetList=[{
+        component.tweetList = [{
             author: "author",
             authorScreenName: "test",
             authorProfileImg: "test",
@@ -89,12 +100,13 @@ describe('TweeterComponent', () => {
             quoteCount: 1,
             twitterId: "test",
             tweetUrl: "test"
-        }] 
+        }
+        ]
 
         fixture.detectChanges();
         fixture.debugElement
-        .query(By.css(".user-name"))
-       
+            .query(By.css(".user-name"))
+
         const compiled = fixture.debugElement.nativeElement;
         expect(compiled.innerHTML).toContain("author");
     }))
